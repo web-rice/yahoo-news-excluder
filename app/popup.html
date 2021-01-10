@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+	<meta charset="UTF-8">
+	<style>
+		.wrapper {
+			padding: 10px;
+		}
+
+		h1 {
+			font-size: 14px;
+			font-weight: normal;
+			margin: 0;
+		}
+
+		h1 small {
+			font-size: 90%;
+			display: inline-block;
+		}
+
+		textarea {
+			font-size: 16px;
+			font-family: sans-serif;
+			margin: .5em 0;
+			padding: 5px;
+			height: 100px;
+		}
+
+		button {
+			border: none;
+			cursor: pointer;
+			outline: none;
+			appearance: none;
+			font-size: 12px;
+			font-family: sans-serif;
+			color: #fff;
+			background: #ff2732;
+			border-radius: 5px;
+			display: inline-block;
+			padding: .5em 1.5em;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="wrapper">
+		<h1>Yahoo!ニュースから除外するワード<small>（改行区切り）</small></h1>
+		<div class="textArea">
+			<textarea id="textArea"></textarea>
+		</div>
+		<button id="save">更新</button>
+	</div>
+	<script src="popup.js"></script>
+</body>
+
+</html>
