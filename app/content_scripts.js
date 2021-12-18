@@ -24,6 +24,9 @@ setInterval(loop, 500);
  * wordsを一定間隔で処理する関数
  */
 function loop() {
+  if (words.length === 1 && words[0] === '') {
+    reset();
+  }
   for (let i = 0; i < words.length; i++) {
     const text = words[i].trim();
     clean(text);
@@ -32,6 +35,17 @@ function loop() {
   if (count !== newCount) {
     count = newCount;
     badge(count);
+  }
+}
+
+/**
+ * 除外した記事を再表示させる関数
+ */
+function reset() {
+  const elms = document.querySelectorAll(targets);
+  for (let i = 0; i < elms.length; i++) {
+    elms[i].classList.remove(hideClass);
+    elms[i].setAttribute('style', '');
   }
 }
 
@@ -46,7 +60,7 @@ function clean(text) {
   }
   for (let i = 0; i < elms.length; i++) {
     if (text !== '' && elms[i].textContent.indexOf(text) !== -1) {
-      if (! elms[i].classList.contains(hideClass)) {
+      if (!elms[i].classList.contains(hideClass)) {
         elms[i].classList.add(hideClass);
         elms[i].setAttribute('style', 'display:none');
       }
@@ -60,7 +74,7 @@ function clean(text) {
           break;
         }
       }
-      if (! flag) {
+      if (!flag) {
         elms[i].classList.remove(hideClass);
         elms[i].setAttribute('style', '');
       }
