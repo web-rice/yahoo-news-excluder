@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Y!News Excluder",
   "description": "Yahoo!ニュースから指定ワードがタイトルに含まれる記事を除外する拡張機能です。",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "icons": {
     "32": "icon/icon_32.png",
     "48": "icon/icon_48.png",
@@ -11,9 +11,7 @@
   "content_scripts": [
     {
       "matches": [
-        "*://www.yahoo.co.jp/",
-        "*://news.yahoo.co.jp/*",
-        "*://headlines.yahoo.co.jp/*"
+        "*://*.yahoo.co.jp/*"
       ],
       "js": [
         "content_scripts.js"
