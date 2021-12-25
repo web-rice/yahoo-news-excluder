@@ -11,9 +11,7 @@
   "content_scripts": [
     {
       "matches": [
-        "*://www.yahoo.co.jp/",
-        "*://news.yahoo.co.jp/*",
-        "*://headlines.yahoo.co.jp/*"
+        "*://*.yahoo.co.jp/*"
       ],
       "js": [
         "content_scripts.js"
