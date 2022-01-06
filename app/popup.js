@@ -8,6 +8,7 @@ btn.addEventListener(
       const arr = str.split(/\n/);
       const json = JSON.stringify(arr);
       chrome.storage.local.set({yne_words: json});
+      chrome.runtime.sendMessage({name: 'apply'});
     },
     false
 );

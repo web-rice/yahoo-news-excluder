@@ -24,13 +24,22 @@ chrome.storage.local.get([keyName], function(result) {
   }
 });
 
-loop();
-setInterval(loop, 1000);
+chrome.runtime.onMessage.addListener((msg) => {
+  if (msg.name === 'apply') {
+    scan();
+  }
+});
+
+const config = {childList: true, subtree: true};
+const observer = new MutationObserver(scan);
+observer.observe(document.body, config);
+
+scan();
 
 /**
- * wordsを一定間隔で処理する関数
+ * wordsを処理する関数
  */
-function loop() {
+function scan() {
   if (words.length === 1 && words[0] === '') {
     reset();
   }
@@ -39,10 +48,8 @@ function loop() {
     clean(text);
   }
   const newCount = document.querySelectorAll('.' + hideClass).length;
-  if (count !== newCount) {
-    count = newCount;
-    badge(count);
-  }
+  count = newCount;
+  badge(count);
 }
 
 /**
