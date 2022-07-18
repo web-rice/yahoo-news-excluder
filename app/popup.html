@@ -1,9 +1,14 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 
 <head>
 	<meta charset="UTF-8">
 	<style>
+		body {
+			color: #333;
+			font-family: sans-serif;
+		}
+
 		.wrapper {
 			padding: 10px;
 		}
@@ -20,11 +25,16 @@
 		}
 
 		textarea {
+			color: inherit;
+			font: inherit;
 			font-size: 16px;
-			font-family: sans-serif;
 			margin: .5em 0;
-			padding: 5px;
+			padding: 10px;
 			height: 100px;
+			border: 1px solid #bbb;
+			width: 300px;
+			height: 150px;
+			resize: vertical;
 		}
 
 		button {
@@ -32,26 +42,33 @@
 			cursor: pointer;
 			outline: none;
 			appearance: none;
-			font-size: 12px;
-			font-family: sans-serif;
+			font: inherit;
+			font-size: 14px;
 			color: #fff;
-			background: #ff2732;
-			border-radius: 5px;
+			background: #0fba7d;
+			border-radius: 2px;
 			display: inline-block;
-			padding: .5em 1.5em;
+			padding: 10px;
+			width: 100%;
 		}
 	</style>
 </head>
 
 <body>
 	<div class="wrapper">
-		<h1>Yahoo!ニュースから除外するワード<small>（改行区切り）</small></h1>
+		<h1 id="h1">
+			<span class="_lang-ja">Yahoo!ニュースから除外するワード<small>（改行区切りで複数指定）</small></span>
+			<span class="_lang-en">Please enter the word you want to exclude<small>（Specify multiple words separated by line breaks）</small></span>
+		</h1>
 		<div class="textArea">
 			<textarea id="textArea"></textarea>
 		</div>
-		<button id="save">更新</button>
+		<button id="save">
+			<span class="_lang-ja">更新</span>
+			<span class="_lang-en">Update</span>
+		</button>
 	</div>
-	<script src="popup.js"></script>
+	<script src="popup.js" defer></script>
 </body>
 
 </html>
