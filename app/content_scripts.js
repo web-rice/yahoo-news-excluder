@@ -1,22 +1,7 @@
-/* global chrome */
-let count = 0;
+/* global chrome, TARGETS */
 let words = [];
-let targets;
 const hideClass = 'yne_hide';
 const keyName = 'yne_words';
-if (document.domain === 'www.yahoo.co.jp') {
-  targets = '#Topics li, #Topics article > a, #Stream article';
-  // eslint-disable-next-line max-len
-} else if (document.domain === 'sports.yahoo.co.jp' || document.domain === 'baseball.yahoo.co.jp' || document.domain === 'soccer.yahoo.co.jp' || document.domain === 'keiba.yahoo.co.jp') {
-  // eslint-disable-next-line max-len
-  targets = '.lsn-listPickup__item,#pic_photo,.cm-topTimeLine__item,.sn-info__item,.cm-videoEmbedSub,.cm-list__item,.sn-doPickup,.sn-doArticleList__item,.sn-textList__item,.sn-list__item,.sn-pickup__item,.io-pickup__item,.io-list__item,.sn-videoList__item,.bb-timeLine__item,#yjSMPickup,.yjMS > li,.sc-timeLine__item,.sn-listPickup__item,#parag_link li,.cm-timeLine__item';
-  if (document.domain === 'keiba.yahoo.co.jp') {
-    targets += ',.mgnBL,.mgnBS,.glanceArticleBox > li';
-  }
-} else {
-  // eslint-disable-next-line max-len
-  targets = '.listModBoxWrap,.listPaneltype_cont, .listFeedWrap, .topicsListItem, .yjnSub_list_item, .newsFeed_item, #newsTopics li, #ranking li,.subList_item,[data-ual-view-type="list"],.yjnSubTopics_list_item,section.topics > div > p,#contentsWrap li';
-}
 
 chrome.storage.local.get([keyName], function(result) {
   if (typeof result[keyName] !== 'undefined') {
@@ -24,10 +9,13 @@ chrome.storage.local.get([keyName], function(result) {
   }
 });
 
-chrome.runtime.onMessage.addListener((msg) => {
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.name === 'apply') {
-    scan();
+    scan().then((response) => {
+      sendResponse(response);
+    });
   }
+  return true;
 });
 
 const config = {childList: true, subtree: true};
@@ -40,7 +28,7 @@ window.addEventListener('load', scan);
 /**
  * wordsを処理する関数
  */
-function scan() {
+async function scan() {
   if (words.length === 1 && words[0] === '') {
     reset();
   }
@@ -49,15 +37,14 @@ function scan() {
     clean(text);
   }
   const newCount = document.querySelectorAll('.' + hideClass).length;
-  count = newCount;
-  badge(count);
+  badge(newCount);
 }
 
 /**
  * 除外した記事を再表示させる関数
  */
 function reset() {
-  const elms = document.querySelectorAll(targets);
+  const elms = document.querySelectorAll(TARGETS.current);
   for (let i = 0; i < elms.length; i++) {
     elms[i].classList.remove(hideClass);
     elms[i].setAttribute('style', '');
@@ -69,12 +56,12 @@ function reset() {
  * @param {string} text 除外する単語
  */
 function clean(text) {
-  const elms = document.querySelectorAll(targets);
+  const elms = document.querySelectorAll(TARGETS.current);
   if (elms.lenth < 1) {
     return;
   }
   for (let i = 0; i < elms.length; i++) {
-    if (text !== '' && elms[i].textContent.indexOf(text) !== -1) {
+    if (jadgeText(elms[i].textContent, text)) {
       if (!elms[i].classList.contains(hideClass)) {
         elms[i].classList.add(hideClass);
         elms[i].setAttribute('style', 'display:none');
@@ -83,7 +70,7 @@ function clean(text) {
       let flag = false;
       for (let ii = 0; ii < words.length; ii++) {
         if (
-          elms[i].textContent.indexOf(words[ii].trim()) !== -1
+          jadgeText(elms[i].textContent, words[ii].trim())
         ) {
           flag = true;
           break;
@@ -94,6 +81,20 @@ function clean(text) {
         elms[i].setAttribute('style', '');
       }
     }
+  }
+}
+
+/**
+ * @param {string} textContent 記事タイトル
+ * @param {string} text 除外する単語
+ * @return {boolean}
+ */
+function jadgeText(textContent, text) {
+  if (!textContent || !text) {
+    return false;
+  }
+  if (textContent.toLowerCase().indexOf(text.toLocaleLowerCase()) !== -1) {
+    return true;
   }
 }
 
