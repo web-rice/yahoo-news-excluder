@@ -10,7 +10,7 @@
 		}
 
 		.wrapper {
-			padding: 10px;
+			padding: 10px 10px 20px;
 		}
 
 		h1 {
@@ -30,10 +30,10 @@
 			font-size: 16px;
 			margin: .5em 0;
 			padding: 10px;
-			height: 100px;
 			border: 1px solid #bbb;
+			border-radius: 3px;
 			width: 300px;
-			height: 150px;
+			height: 200px;
 			resize: vertical;
 		}
 
@@ -43,13 +43,136 @@
 			outline: none;
 			appearance: none;
 			font: inherit;
-			font-size: 14px;
+			font-weight: bold;
+			font-size: 16px;
 			color: #fff;
 			background: #0fba7d;
-			border-radius: 2px;
-			display: inline-block;
-			padding: 10px;
+			border-radius: 3px;
+			display: block;
+			padding: 12px;
 			width: 100%;
+			position: relative;
+		}
+
+		button .text {
+			opacity: 0;
+		}
+
+		button .text.show {
+			opacity: 1;
+		}
+
+		button .text ._lang {
+			position: relative;
+			display: inline-block;
+		}
+
+		button .text ._check {
+			position: absolute;
+			top: 50%;
+			margin: -9px 0 0 -25px;
+			display: block;
+			width: 14px;
+			height: 14px;
+			display: none;
+		}
+
+		#save.updated ._check {
+			display: block;
+		}
+
+		#save.updated ._check::before,
+		#save.updated ._check::after {
+			content: "";
+			display: block;
+			position: absolute;
+		}
+
+		#save.updated ._check::before {
+			width: 100%;
+			height: 100%;
+			border: 2px solid #fff;
+			border-radius: 50px;
+		}
+
+		#save.updated ._check::after {
+			width: 6px;
+			height: 4px;
+			border-left: 2px solid #fff;
+			border-bottom: 2px solid #fff;
+			transform: rotate(-45deg);
+			margin: 5px 0 0 5px;
+		}
+
+		.loader {
+			width: 24px;
+			height: 24px;
+			border: 3px solid #FFF;
+			border-bottom-color: transparent;
+			border-radius: 50%;
+			display: inline-block;
+			box-sizing: border-box;
+			animation: rotation 1s linear infinite;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			margin: -12px 0 0 -12px;
+			pointer-events: none;
+			opacity: 0;
+		}
+
+		.loader.show {
+			opacity: 1;
+		}
+
+		@keyframes rotation {
+			0% {
+				transform: rotate(0deg);
+			}
+
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+
+		.donation {
+			border-top: 1px solid #ccc;
+			padding: 15px 0 0;
+			margin: 20px 0 0;
+		}
+
+		.donation ._text {
+			margin: 0 0 15px;
+		}
+
+		.donation ._btns {
+			display: flex;
+			gap: 10px;
+		}
+
+		.donation ._coffee {
+			width: 150px;
+			margin: 0;
+		}
+
+		._coffee img {
+			width: 100%;
+			height: auto;
+		}
+
+		.donation ._github {
+			margin: 0;
+		}
+
+		._github a {
+			font-size: 12px;
+			font-weight: bold;
+			color: #000;
+			text-decoration: none;
+			display: inline-block;
+			border: 1px solid #000;
+			border-radius: 5px;
+			padding: 10px 15px;
 		}
 	</style>
 </head>
@@ -64,9 +187,23 @@
 			<textarea id="textArea"></textarea>
 		</div>
 		<button id="save">
-			<span class="_lang-ja">更新</span>
-			<span class="_lang-en">Update</span>
+			<span class="text show">
+				<span class="_lang _lang-ja">
+					<spna class="_check"></spna>更新
+				</span>
+				<span class="_lang _lang-en">
+					<spna class="_check"></spna>Update
+				</span>
+			</span>
+			<span id="loader" class="loader"></span>
 		</button>
+		<div id="donation" class="donation">
+			<p class="_text">Y!News Excluderの開発継続と発展のため、コーヒー1杯分ご寄付いただけますと嬉しいです。</p>
+			<div class="_btns">
+				<p class="_coffee"><a href="https://www.buymeacoffee.com/webrice" target="_blank" rel="noopener"><img src="https://cdn.buymeacoffee.com/buttons/v2/arial-yellow.png" alt="Buy Me A Coffee"></a></p>
+				<p class="_github"><a href="https://github.com/sponsors/web-rice" target="_blank" rel="noopener">GitHub Sponsors</a></p>
+			</div>
+		</div>
 	</div>
 	<script src="popup.js" defer></script>
 </body>

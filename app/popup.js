@@ -1,6 +1,12 @@
 /* global chrome */
 const btn = document.getElementById('save');
+const btnText = btn.querySelector('.text');
+const loader = document.getElementById('loader');
 const textArea = document.getElementById('textArea');
+const LOADER_MIN_TIME = 100;
+
+btn.classList.remove('updated');
+
 btn.addEventListener(
     'click',
     () => {
@@ -18,7 +24,37 @@ btn.addEventListener(
       };
       chrome.tabs.query(queryOptions, (tabs) => {
         if (tabs.length > 0) {
-          chrome.tabs.sendMessage(tabs[0].id, {name: 'apply'});
+          loader.classList.add('show');
+          btnText.classList.remove('show');
+          let time = 0;
+          const timer = setInterval(() => {
+            time++;
+            if (time > LOADER_MIN_TIME) {
+              clearInterval(timer);
+            }
+          }, 1);
+          chrome.tabs.sendMessage(
+              tabs[0].id,
+              {
+                name: 'apply',
+              },
+              null,
+              (response) => {
+                clearInterval(timer);
+                const complete = () => {
+                  loader.classList.remove('show');
+                  btnText.classList.add('show');
+                  if (Number.isInteger(response)) {
+                    btn.classList.add('updated');
+                  }
+                };
+                if (timer < LOADER_MIN_TIME) {
+                  setTimeout(complete, LOADER_MIN_TIME - timer);
+                } else {
+                  complete();
+                }
+              },
+          );
         }
       });
     },

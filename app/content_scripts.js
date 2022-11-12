@@ -38,6 +38,7 @@ async function scan() {
   }
   const newCount = document.querySelectorAll('.' + hideClass).length;
   badge(newCount);
+  return newCount;
 }
 
 /**

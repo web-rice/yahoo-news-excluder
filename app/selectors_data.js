@@ -100,7 +100,9 @@ const TARGETS = {
     '[data-ual-view-type="list"]',
     '.yjnSubTopics_list_item',
     'section.topics > div > p',
-    '#contentsWrap li',
+    '[class^=ArticleReaction__Wrapper-] + section > ul > li',
+    '#yjnSub li',
+    '.ArticleList_item',
   ],
 };
 
