@@ -3,6 +3,10 @@ let words = [];
 const hideClass = 'yne_hide';
 const keyName = 'yne_words';
 
+String.prototype.zenkakuToHankaku = function() {
+  return this.replace(/[Ａ-Ｚａ-ｚ０-９]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+};
+
 chrome.storage.local.get([keyName], function(result) {
   if (typeof result[keyName] !== 'undefined') {
     words = JSON.parse(result[keyName]);
@@ -94,9 +98,7 @@ function jadgeText(textContent, text) {
   if (!textContent || !text) {
     return false;
   }
-  if (textContent.toLowerCase().indexOf(text.toLocaleLowerCase()) !== -1) {
-    return true;
-  }
+  return (textContent.toLocaleLowerCase().zenkakuToHankaku().indexOf(text.toLocaleLowerCase().zenkakuToHankaku()) !== -1);
 }
 
 chrome.storage.onChanged.addListener(function(changes, namespace) {
