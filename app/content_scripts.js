@@ -3,10 +3,6 @@ let words = [];
 const hideClass = 'yne_hide';
 const keyName = 'yne_words';
 
-String.prototype.zenkakuToHankaku = function() {
-  return this.replace(/[Ａ-Ｚａ-ｚ０-９]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
-};
-
 chrome.storage.local.get([keyName], function(result) {
   if (typeof result[keyName] !== 'undefined') {
     words = JSON.parse(result[keyName]);
@@ -98,7 +94,21 @@ function judgeText(textContent, text) {
   if (!textContent || !text) {
     return false;
   }
-  return (textContent.toLocaleLowerCase().zenkakuToHankaku().indexOf(text.toLocaleLowerCase().zenkakuToHankaku()) !== -1);
+  return (
+    zenkakuToHankaku(textContent.toLocaleLowerCase())
+        .indexOf(zenkakuToHankaku(text.toLocaleLowerCase())) !== -1
+  );
+}
+
+/**
+ * 全角を半角に統一
+ * @param {string} str 記事タイトル
+ * @return {string}
+ */
+function zenkakuToHankaku(str) {
+  return str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, (s) => {
+    return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+  });
 }
 
 chrome.storage.onChanged.addListener(function(changes, namespace) {
