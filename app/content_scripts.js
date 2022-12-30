@@ -62,7 +62,7 @@ function clean(text) {
     return;
   }
   for (let i = 0; i < elms.length; i++) {
-    if (jadgeText(elms[i].textContent, text)) {
+    if (judgeText(elms[i].textContent, text)) {
       if (!elms[i].classList.contains(hideClass)) {
         elms[i].classList.add(hideClass);
         elms[i].setAttribute('style', 'display:none');
@@ -71,7 +71,7 @@ function clean(text) {
       let flag = false;
       for (let ii = 0; ii < words.length; ii++) {
         if (
-          jadgeText(elms[i].textContent, words[ii].trim())
+          judgeText(elms[i].textContent, words[ii].trim())
         ) {
           flag = true;
           break;
@@ -90,13 +90,25 @@ function clean(text) {
  * @param {string} text 除外する単語
  * @return {boolean}
  */
-function jadgeText(textContent, text) {
+function judgeText(textContent, text) {
   if (!textContent || !text) {
     return false;
   }
-  if (textContent.toLowerCase().indexOf(text.toLocaleLowerCase()) !== -1) {
-    return true;
-  }
+  return (
+    zenkakuToHankaku(textContent.toLocaleLowerCase())
+        .indexOf(zenkakuToHankaku(text.toLocaleLowerCase())) !== -1
+  );
+}
+
+/**
+ * 全角を半角に統一
+ * @param {string} str 記事タイトル
+ * @return {string}
+ */
+function zenkakuToHankaku(str) {
+  return str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, (s) => {
+    return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+  });
 }
 
 chrome.storage.onChanged.addListener(function(changes, namespace) {

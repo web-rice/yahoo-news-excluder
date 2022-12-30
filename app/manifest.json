@@ -3,7 +3,7 @@
   "name": "Y!News Excluder",
   "description": "__MSG_appDesc__",
   "default_locale": "ja",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "icons": {
     "32": "icon/icon_32.png",
     "48": "icon/icon_48.png",
