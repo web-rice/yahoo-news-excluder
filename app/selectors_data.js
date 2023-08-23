@@ -4,7 +4,7 @@ const TARGETS = {
       domains: ['www.yahoo.co.jp'],
       selectors: [
         '#Topics li',
-        '#Topics article > a',
+        '#Topics article:not([class]) > a',
         '#Stream article',
       ],
     },
@@ -71,8 +71,7 @@ const TARGETS = {
     },
     {
       domains: [
-        'www.yahoo.com',
-        'news.yahoo.com',
+        /^(.*?\.yahoo|yahoo).com/,
       ],
       selectors: [
         '.ntk-link-filter',
@@ -122,6 +121,8 @@ TARGETS.domain.some((obj, i) => {
  * @return {boolean}
  */
 function isCurrentDomain(domains) {
+  if (typeof domains[0] === 'object') {
+    return domains[0].test(document.domain);
+  }
   return domains.includes(document.domain);
 }
-

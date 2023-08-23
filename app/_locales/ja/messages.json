@@ -1,5 +1,17 @@
 {
   "appDesc": {
     "message": "Yahoo!ニュースから指定ワードがタイトルに含まれる記事を除外する拡張機能です。"
+  },
+  "popupDesc": {
+    "message": "Yahoo!ニュースから除外するワード"
+  },
+  "popupDescSmall": {
+    "message": "（改行区切りで複数指定）"
+  },
+  "infoHeading": {
+    "message": "Information"
+  },
+  "updateBtn": {
+    "message": "更新"
   }
 }

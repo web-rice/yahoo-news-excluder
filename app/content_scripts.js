@@ -5,7 +5,15 @@ const keyName = 'yne_words';
 
 chrome.storage.local.get([keyName], function(result) {
   if (typeof result[keyName] !== 'undefined') {
-    words = JSON.parse(result[keyName]);
+    words = makeObject(JSON.parse(result[keyName]));
+  }
+});
+
+chrome.storage.onChanged.addListener(function(changes, namespace) {
+  if (typeof changes[keyName].newValue !== 'undefined') {
+    words = makeObject(JSON.parse(changes[keyName].newValue));
+  } else {
+    words = [''];
   }
 });
 
@@ -22,8 +30,34 @@ const config = {childList: true, subtree: true};
 const observer = new MutationObserver(scan);
 observer.observe(document.body, config);
 
-window.addEventListener('DOMContentLoaded', scan);
-window.addEventListener('load', scan);
+// window.addEventListener('DOMContentLoaded', scan);
+// window.addEventListener('load', scan);
+
+/**
+ * キーワードを整理
+ * @param {Array} words キーワードの配列
+ * @return {Array}
+ */
+function makeObject(words) {
+  const arr = [];
+  words.forEach((row, i) => {
+    const data = row.split('||');
+    arr[i] = {
+      word: data[0].trim(),
+      case: '1',
+      rate: '100',
+      loopCount: 0,
+    };
+    if (data.length > 0 && typeof data[1] !== 'undefined') {
+      const settingTexts = data[1].split(',');
+      settingTexts.forEach((text) => {
+        const setting = text.split(':');
+        arr[i][setting[0]] = setting[1];
+      });
+    }
+  });
+  return arr;
+}
 
 /**
  * wordsを処理する関数
@@ -32,11 +66,7 @@ async function scan() {
   if (words.length === 1 && words[0] === '') {
     reset();
   }
-  for (let i = 0; i < words.length; i++) {
-    const text = words[i].trim();
-    clean(text);
-  }
-  const newCount = document.querySelectorAll('.' + hideClass).length;
+  const newCount = clean();
   badge(newCount);
   return newCount;
 }
@@ -54,50 +84,82 @@ function reset() {
 
 /**
  *
- * @param {string} text 除外する単語
+ * @return {number} カウント数
  */
-function clean(text) {
+function clean() {
   const elms = document.querySelectorAll(TARGETS.current);
   if (elms.lenth < 1) {
     return;
   }
-  for (let i = 0; i < elms.length; i++) {
-    if (judgeText(elms[i].textContent, text)) {
-      if (!elms[i].classList.contains(hideClass)) {
-        elms[i].classList.add(hideClass);
-        elms[i].setAttribute('style', 'display:none');
+
+  for (let i = 0; i < words.length; i++) {
+    words[i].loopCount = 0;
+  }
+
+  elms.forEach((elm) => {
+    let isHit = false;
+    const show = () => {
+      elm.classList.remove(hideClass);
+      elm.setAttribute('style', '');
+    };
+
+    for (let i = 0; i < words.length; i++) {
+      const data = words[i];
+      if (!judgeText(elm.textContent, data)) {
+        continue;
       }
-    } else if (elms[i].classList.contains(hideClass)) {
-      let flag = false;
-      for (let ii = 0; ii < words.length; ii++) {
-        if (
-          judgeText(elms[i].textContent, words[ii].trim())
-        ) {
-          flag = true;
-          break;
+
+      words[i].loopCount++;
+      const count = words[i].loopCount;
+      const rateNum = 100 - Number(data.rate.replace('!', ''));
+      const rate = Math.round(100 / (rateNum > 0 ? rateNum : 1));
+
+      if (!elm.classList.contains(hideClass)) {
+        elm.classList.add(hideClass);
+        elm.setAttribute('style', 'display:none');
+      }
+
+      if (data.rate.indexOf('!') !== -1) {
+        if (count === 1) {
+          show();
+        }
+        if (rate <= count) {
+          words[i].loopCount = 0;
+        }
+      } else {
+        if (rate <= count) {
+          show();
+          words[i].loopCount = 0;
         }
       }
-      if (!flag) {
-        elms[i].classList.remove(hideClass);
-        elms[i].setAttribute('style', '');
-      }
+
+      isHit = true;
+      break;
     }
-  }
+
+    if (!isHit && elm.classList.contains(hideClass)) {
+      show();
+    }
+  });
+  return document.querySelectorAll('.' + hideClass).length;
 }
 
 /**
  * @param {string} textContent 記事タイトル
- * @param {string} text 除外する単語
+ * @param {string} data キーワードと設定
  * @return {boolean}
  */
-function judgeText(textContent, text) {
-  if (!textContent || !text) {
+function judgeText(textContent, data) {
+  if (!textContent || !data.word) {
     return false;
   }
-  return (
-    zenkakuToHankaku(textContent.toLocaleLowerCase())
-        .indexOf(zenkakuToHankaku(text.toLocaleLowerCase())) !== -1
-  );
+  let a = textContent;
+  let b = data.word;
+  if ('case' in data && parseInt(data.case) === 0) {
+    a = textContent.toLocaleLowerCase();
+    b = data.word.toLocaleLowerCase();
+  }
+  return (zenkakuToHankaku(a).indexOf(zenkakuToHankaku(b)) !== -1);
 }
 
 /**
@@ -110,14 +172,6 @@ function zenkakuToHankaku(str) {
     return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
   });
 }
-
-chrome.storage.onChanged.addListener(function(changes, namespace) {
-  if (typeof changes[keyName].newValue !== 'undefined') {
-    words = JSON.parse(changes[keyName].newValue);
-  } else {
-    words = [''];
-  }
-});
 
 /**
  *

@@ -32,8 +32,10 @@
 			padding: 10px;
 			border: 1px solid #bbb;
 			border-radius: 3px;
-			width: 300px;
-			height: 200px;
+			box-sizing: border-box;
+			width: 100%;
+			min-width: 320px;
+			height: 220px;
 			resize: vertical;
 		}
 
@@ -62,7 +64,7 @@
 			opacity: 1;
 		}
 
-		button .text ._lang {
+		button .text ._inner {
 			position: relative;
 			display: inline-block;
 		}
@@ -174,34 +176,69 @@
 			border-radius: 5px;
 			padding: 10px 15px;
 		}
+
+		.info {
+			border-top: 1px solid #ccc;
+			padding: 15px 0 0;
+			margin: 20px 0 0;
+		}
+
+		.info h2 {
+			margin: 0;
+			font-size: 12px;
+			color: #999;
+		}
+
+		.info ul {
+			margin: 5px 0 0;
+			padding: 0 0 0 1.4em;
+			font-size: 11px;
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+			white-space: nowrap;
+			width: 320px;
+		}
+
+		.info ul a {
+			color: #666;
+			text-overflow: ellipsis;
+			display: block;
+			width: 100%;
+			overflow: hidden;
+		}
 	</style>
 </head>
 
 <body>
 	<div class="wrapper">
 		<h1 id="h1">
-			<span class="_lang-ja">Yahoo!ニュースから除外するワード<small>（改行区切りで複数指定）</small></span>
-			<span class="_lang-en">Please enter the word you want to exclude<small>（Specify multiple words separated by line breaks）</small></span>
+			<span data-lang-name="popupDesc"><small data-lang-name="popupDescSmall"></small></span>
 		</h1>
 		<div class="textArea">
 			<textarea id="textArea"></textarea>
 		</div>
 		<button id="save">
 			<span class="text show">
-				<span class="_lang _lang-ja">
-					<spna class="_check"></spna>更新
-				</span>
-				<span class="_lang _lang-en">
-					<spna class="_check"></spna>Update
+				<span class="_inner">
+					<spna class="_check"></spna><span data-lang-name="updateBtn"></span>
 				</span>
 			</span>
 			<span id="loader" class="loader"></span>
 		</button>
-		<div id="donation" class="donation">
-			<p class="_text">Y!News Excluderの開発継続と発展のため、コーヒー1杯分ご寄付いただけますと嬉しいです。</p>
-			<div class="_btns">
-				<p class="_coffee"><a href="https://www.buymeacoffee.com/webrice" target="_blank" rel="noopener"><img src="https://cdn.buymeacoffee.com/buttons/v2/arial-yellow.png" alt="Buy Me A Coffee"></a></p>
-				<p class="_github"><a href="https://github.com/sponsors/web-rice" target="_blank" rel="noopener">GitHub Sponsors</a></p>
+		<div id="info" class="info">
+			<h2 data-lang-name="infoHeading"></h2>
+			<div class="_lang-ja">
+				<ul>
+					<li><a href="https://noze.space/archives/592" target="_blank" rel="noopener">SafariとFirefoxに対応し、iPhoneでも使えるようになりました。</a></li>
+					<li><a href="https://noze.space/archives/592#option" target="_blank" rel="noopener">裏技オプション機能を追加しました</a></li>
+				</ul>
+			</div>
+			<div class="_lang-en">
+				<ul>
+					<li><a href="https://noze.space/archives/592" target="_blank" rel="noopener">It supports Safari and Firefox, and can now be used on the iPhone as well.</a></li>
+					<li><a href="https://noze.space/archives/592#option" target="_blank" rel="noopener">Added optional settings feature.</a></li>
+				</ul>
 			</div>
 		</div>
 	</div>
