@@ -1,5 +1,17 @@
 {
   "appDesc": {
     "message": "This is an extension that excludes articles whose title contains the specified word from Yahoo! News."
+  },
+  "popupDesc": {
+    "message": "Please enter the word you want to exclude"
+  },
+  "popupDescSmall": {
+    "message": " (Specify multiple words separated by line breaks)"
+  },
+  "infoHeading": {
+    "message": "Information"
+  },
+  "updateBtn": {
+    "message": "Update"
   }
 }

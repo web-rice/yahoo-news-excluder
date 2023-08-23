@@ -13,7 +13,10 @@
     "default_icon": {
       "19": "icon/icon_19.png"
     },
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "ja": {
+      "default_popup": "popup_ja.html"
+    }
   },
   "content_scripts": [
     {
